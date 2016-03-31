@@ -77,20 +77,44 @@ export default class Video extends Component {
       this.props.onEnd(event.nativeEvent);
     }
   }
-
-  render() {
-    const {
-      source,
-      resizeMode,
-    } = this.props;
-
+  
+  _processUri(source) {
+    if (typeof source == 'undefined') return {}
+    
     let uri = source.uri;
     if (uri && uri.match(/^\//)) {
       uri = `file://${uri}`;
     }
-
     const isNetwork = !!(uri && uri.match(/^https?:/));
     const isAsset = !!(uri && uri.match(/^(assets-library|file|content):/));
+    return {
+      uri,
+      isNetwork,
+      isAsset,
+      type: source.type || 'mp4',
+    };
+  }
+
+  render() {
+    if(typeof source !== 'undefined' || typeof sources !== 'undefined') 
+        throw "You need to provide a 'source' or 'sources' key"
+    
+    const {
+      source,
+      sources,
+      resizeMode,
+    } = this.props;
+
+    let src = {}
+    let srcs = []
+    
+    if (typeof source != 'undefined') {
+      src = this._processUri(source)
+    }
+    
+    if (typeof sources != 'undefined') {
+      srcs = sources.map((sourceItem) => { return this._processUri(sourceItem) })
+    }
 
     let nativeResizeMode;
     if (resizeMode === VideoResizeMode.stretch) {
@@ -107,12 +131,8 @@ export default class Video extends Component {
     Object.assign(nativeProps, {
       style: [styles.base, nativeProps.style],
       resizeMode: nativeResizeMode,
-      src: {
-        uri,
-        isNetwork,
-        isAsset,
-        type: source.type || 'mp4',
-      },
+      src: src,
+      srcs: srcs,
       onVideoLoadStart: this._onLoadStart,
       onVideoLoad: this._onLoad,
       onVideoError: this._onError,
@@ -164,6 +184,7 @@ Video.propTypes = {
 const RCTVideo = requireNativeComponent('RCTVideo', Video, {
   nativeOnly: {
     src: true,
+    srcs: true,
     seek: true,
   },
 });
