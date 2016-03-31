@@ -11,21 +11,21 @@ RCT_EXPORT_MODULE();
 
 - (UIView *)view
 {
-  return [[RCTVideo alloc] initWithEventDispatcher:self.bridge.eventDispatcher];
+    return [[RCTVideo alloc] initWithEventDispatcher:self.bridge.eventDispatcher];
 }
 
 /* Should support: onLoadStart, onLoad, and onError to stay consistent with Image */
 
 - (NSArray *)customDirectEventTypes
 {
-  return @[
-    @"onVideoLoadStart",
-    @"onVideoLoad",
-    @"onVideoError",
-    @"onVideoProgress",
-    @"onVideoSeek",
-    @"onVideoEnd"
-  ];
+    return @[
+             @"onVideoLoadStart",
+             @"onVideoLoad",
+             @"onVideoError",
+             @"onVideoProgress",
+             @"onVideoSeek",
+             @"onVideoEnd"
+             ];
 }
 
 - (dispatch_queue_t)methodQueue
@@ -34,6 +34,7 @@ RCT_EXPORT_MODULE();
 }
 
 RCT_EXPORT_VIEW_PROPERTY(src, NSDictionary);
+RCT_EXPORT_VIEW_PROPERTY(srcs, NSArray);
 RCT_EXPORT_VIEW_PROPERTY(resizeMode, NSString);
 RCT_EXPORT_VIEW_PROPERTY(repeat, BOOL);
 RCT_EXPORT_VIEW_PROPERTY(paused, BOOL);
@@ -46,12 +47,12 @@ RCT_EXPORT_VIEW_PROPERTY(currentTime, float);
 
 - (NSDictionary *)constantsToExport
 {
-  return @{
-    @"ScaleNone": AVLayerVideoGravityResizeAspect,
-    @"ScaleToFill": AVLayerVideoGravityResize,
-    @"ScaleAspectFit": AVLayerVideoGravityResizeAspect,
-    @"ScaleAspectFill": AVLayerVideoGravityResizeAspectFill
-  };
+    return @{
+             @"ScaleNone": AVLayerVideoGravityResizeAspect,
+             @"ScaleToFill": AVLayerVideoGravityResize,
+             @"ScaleAspectFit": AVLayerVideoGravityResizeAspect,
+             @"ScaleAspectFill": AVLayerVideoGravityResizeAspectFill
+             };
 }
 
 @end
